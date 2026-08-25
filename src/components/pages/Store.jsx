@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react>router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import laptopsImg from '/src/assets/storeCat/laptop.webp';
 import miceImg from '/src/assets/storeCat/mice.webp';
