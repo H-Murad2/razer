@@ -1,0 +1,9 @@
+@import "tailwindcss";
+/* Scrollbar-ı vizual olaraq gizlədir, amma scroll funksiyasını saxlayır */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE və Edge */
+  scrollbar-width: none;  /* Firefox */
+}
