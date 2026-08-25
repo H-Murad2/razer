@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+const API_BASE_URL = "https://razer-api-88py.vercel.app";
+
 const getColorHex = (colorName) => {
   if (!colorName) return "#222222";
   const name = colorName.toLowerCase();
@@ -20,7 +22,7 @@ const formatImagePath = (path) => {
   if (imgPath.startsWith("/api/images")) imgPath = imgPath.replace("/api/images", "/images");
   if (imgPath.startsWith("http")) return imgPath;
   if (!imgPath.startsWith("/")) imgPath = "/" + imgPath;
-  return `http://localhost:3000${imgPath}`;
+  return `${API_BASE_URL}${imgPath}`;
 };
 
 function ProductDetail({ onAddToCart }) {
@@ -61,8 +63,14 @@ function ProductDetail({ onAddToCart }) {
 
     if (id) {
       setLoading(true);
-      fetch(`http://localhost:3000/api/products/${id}`)
-        .then((res) => (res.ok ? res.json() : null))
+      fetch(`${API_BASE_URL}/api/products/${id}`)
+        .then(async (res) => {
+          const contentType = res.headers.get("content-type");
+          if (!res.ok || !contentType || !contentType.includes("application/json")) {
+            return null;
+          }
+          return res.json();
+        })
         .then((data) => {
           if (data) {
             setProduct(data);
