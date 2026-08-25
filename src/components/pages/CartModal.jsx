@@ -23,20 +23,20 @@ function CartModal({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem,
   // Checkout düyməsinə kliklədikdə
   const handleCheckout = () => {
     setOrderSuccess(true);
+    if (onClearCart) {
+      onClearCart();
+    }
   };
 
   // OK düyməsinə kliklədikdə
   const handleOrderConfirm = () => {
     setOrderSuccess(false);
-    if (onClearCart) {
-      onClearCart();
-    }
     onClose();
     navigate('/');
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto font-['Inter'] antialiased">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto overflow-x-hidden font-['Inter'] antialiased">
       
       {/* Sifariş Uğurla Qeydə Alındı Modalı (Overlay) */}
       {orderSuccess ? (
@@ -58,12 +58,12 @@ function CartModal({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem,
           </button>
         </div>
       ) : (
-        <div className="bg-[#121212] border border-[#1f1f1f] text-white rounded-lg w-full max-w-4xl p-6 md:p-8 relative shadow-2xl">
+        <div className="bg-[#121212] border border-[#1f1f1f] text-white rounded-lg w-full max-w-4xl p-5 sm:p-6 md:p-8 relative shadow-2xl overflow-x-hidden">
           
           {/* Bağlamaq düyməsi */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-normal cursor-pointer transition-colors"
+            className="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-normal cursor-pointer transition-colors z-10"
           >
             ✕
           </button>
@@ -101,9 +101,9 @@ function CartModal({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem,
                       />
                     </div>
 
-                    {/* Məhsul Məlumatı */}
-                    <div className="flex-1 space-y-1">
-                      <h3 className="font-semibold text-white text-sm tracking-tight leading-snug">
+                    {/* Məhsul Məlumatı (min-w-0 əlavə olundu ki, daşma etməsin) */}
+                    <div className="flex-1 space-y-1 min-w-0">
+                      <h3 className="font-semibold text-white text-sm tracking-tight leading-snug truncate">
                         {item.name}
                       </h3>
 
@@ -127,7 +127,7 @@ function CartModal({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem,
                     </div>
 
                     {/* Qiymət və Artırıb-Azaltmaq Düymələri */}
-                    <div className="flex flex-col items-end gap-3">
+                    <div className="flex flex-col items-end gap-3 flex-shrink-0">
                       <span className="font-semibold text-white text-base tracking-tight">
                         ${(Number(item.price) * item.quantity).toFixed(2)}
                       </span>
