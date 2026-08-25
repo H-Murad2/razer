@@ -69,7 +69,7 @@ function Home() {
         setBestSellers(selectedProducts);
       } catch (error) {
         console.error("Error fetching best sellers:", error);
-      } font-medium {
+      } finally {
         setLoading(false);
       }
     };
