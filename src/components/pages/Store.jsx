@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react>router-dom';
 
 import laptopsImg from '/src/assets/storeCat/laptop.webp';
 import miceImg from '/src/assets/storeCat/mice.webp';
@@ -10,6 +10,9 @@ import audioImg from '/src/assets/storeCat/audio.webp';
 import chairsImg from '/src/assets/storeCat/chairs.webp';
 import contentCreationImg from '/src/assets/storeCat/content-creation.webp';
 import gamerRoomImg from '/src/assets/storeCat/game-room.webp';
+
+// Live Vercel API Base URL
+const API_BASE_URL = "https://razer-api-88py.vercel.app";
 
 const categories = [
   { id: 'laptop', name: 'Laptops', image: laptopsImg },
@@ -24,28 +27,32 @@ const categories = [
 ];
 
 const categoryEndpoints = [
-  { categoryId: 'laptop', url: '/api/laptop' },
-  { categoryId: 'mice', url: '/api/mice' },
-  { categoryId: 'keyboards', url: '/api/keyboards' },
-  { categoryId: 'audio', url: '/api/audio' },
-  { categoryId: 'chairs', url: '/api/chairs' },
-  { categoryId: 'controllers', url: '/api/controllers' },
-  { categoryId: 'mouse-mats', url: '/api/mouse-mats' },
-  { categoryId: 'content-creation', url: '/api/content-creation' },
-  { categoryId: 'game-room', url: '/api/game-room' },
+  { categoryId: 'laptop', url: `${API_BASE_URL}/api/laptop` },
+  { categoryId: 'mice', url: `${API_BASE_URL}/api/mice` },
+  { categoryId: 'keyboards', url: `${API_BASE_URL}/api/keyboards` },
+  { categoryId: 'audio', url: `${API_BASE_URL}/api/audio` },
+  { categoryId: 'chairs', url: `${API_BASE_URL}/api/chairs` },
+  { categoryId: 'controllers', url: `${API_BASE_URL}/api/controllers` },
+  { categoryId: 'mouse-mats', url: `${API_BASE_URL}/api/mouse-mats` },
+  { categoryId: 'content-creation', url: `${API_BASE_URL}/api/content-creation` },
+  { categoryId: 'game-room', url: `${API_BASE_URL}/api/game-room` },
 ];
 
 const formatImagePath = (path) => {
   if (!path) return "";
   let imgPath = path;
+  
   if (imgPath.startsWith("/api/images")) {
     imgPath = imgPath.replace("/api/images", "/images");
   }
+  
   if (imgPath.startsWith("http")) return imgPath;
+  
   if (!imgPath.startsWith("/")) {
     imgPath = "/" + imgPath;
   }
-  return `http://localhost:3000${imgPath}`;
+  
+  return `${API_BASE_URL}${imgPath}`;
 };
 
 const getColorHex = (colorName) => {
@@ -63,7 +70,6 @@ const getColorHex = (colorName) => {
   return name;
 };
 
-// Kateqoriya keçidlərində göstəriləcək Skeleton Kartı
 function ProductSkeleton() {
   return (
     <div className="bg-[#181818] border border-[#222222] rounded-md overflow-hidden flex flex-col justify-between animate-pulse h-[450px]">
@@ -135,7 +141,6 @@ function ProductCard({ product }) {
           </span>
         )}
 
-        {/* Şəkil yüklənənə qədər görünən spinner */}
         {imgLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-[#222222] z-20">
             <div className="w-8 h-8 border-4 border-[#00FF00] border-t-transparent rounded-full animate-spin" />
@@ -311,7 +316,6 @@ function Store() {
   return (
     <div className="bg-black text-white py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-12">
-        {/* Kateqoriyalar */}
         <div className="flex flex-wrap items-center justify-center gap-6 text-center">
           {categories.map((item) => {
             const isSelected = selectedCategory === item.id;
@@ -343,7 +347,6 @@ function Store() {
           })}
         </div>
 
-        {/* Başlıq */}
         <div className="border-t border-[#222222] pt-8 text-center sm:text-left">
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-wider text-[#00FF00]">
             DISCOVER GEAR FOR GAMERS. BY GAMERS.
@@ -353,7 +356,6 @@ function Store() {
           </p>
         </div>
 
-        {/* Məhsul Toru (Grid) */}
         {categoryLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, idx) => (
