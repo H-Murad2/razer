@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import HeroVid from '/src/assets/huntsman-v3-pro-low-profile-tkl-8khz-animated-homepage-banner-1920-x-700-web.mp4';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE_URL = "https://razer-api-88py.vercel.app";
+
 function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -11,15 +13,15 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   const endpoints = [
-    "/api/laptop",
-    "/api/mice",
-    "/api/keyboards",
-    "/api/audio",
-    "/api/chairs",
-    "/api/controllers",
-    "/api/mouse-mats",
-    "/api/content-creation",
-    "/api/game-room",
+    `${API_BASE_URL}/api/laptop`,
+    `${API_BASE_URL}/api/mice`,
+    `${API_BASE_URL}/api/keyboards`,
+    `${API_BASE_URL}/api/audio`,
+    `${API_BASE_URL}/api/chairs`,
+    `${API_BASE_URL}/api/controllers`,
+    `${API_BASE_URL}/api/mouse-mats`,
+    `${API_BASE_URL}/api/content-creation`,
+    `${API_BASE_URL}/api/game-room`,
   ];
 
   // Şəkil yolunu tənzimləyən köməkçi funksiya
@@ -38,10 +40,10 @@ function Home() {
       imgPath = "/" + imgPath;
     }
 
-    return `http://localhost:3000${imgPath}`;
+    return `${API_BASE_URL}${imgPath}`;
   };
 
- useEffect(() => {
+  useEffect(() => {
     const fetchAllProducts = async () => {
       try {
         const responses = await Promise.all(
@@ -67,7 +69,7 @@ function Home() {
         setBestSellers(selectedProducts);
       } catch (error) {
         console.error("Error fetching best sellers:", error);
-      } finally {
+      } font-medium {
         setLoading(false);
       }
     };
@@ -76,22 +78,21 @@ function Home() {
   }, []);
 
   const handleBuyClick = (product, imageUrl) => {
-  const productId = product.id || product._uniqueKey || `${product.category || 'item'}-${Math.random().toString(36).substring(2, 7)}`;
-  const productData = {
-    ...product,
-    image: imageUrl,
-    name: product.name,
-    price: product.price || 0
-  };
+    const productId = product.id || product._uniqueKey || `${product.category || 'item'}-${Math.random().toString(36).substring(2, 7)}`;
+    const productData = {
+      ...product,
+      image: imageUrl,
+      name: product.name,
+      price: product.price || 0
+    };
 
-  // state daxilində 'from: "home"' parametrini göndəririk
-  navigate(`/product/${productId}`, { state: { product: productData, from: 'home' } });
-};
+    navigate(`/product/${productId}`, { state: { product: productData, from: 'home' } });
+  };
 
   if (loading) {
     return (
       <div className="bg-black text-white min-h-screen flex items-center justify-center">
-        <p className="text-xl font-semibold animate-pulse">Loading...</p>
+        <p className="text-xl font-semibold animate-pulse text-[#00FF00]">Loading...</p>
       </div>
     );
   }
