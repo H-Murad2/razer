@@ -62,6 +62,11 @@ function App() {
     setCartItems((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Səbəti tamamilə təmizləmək (Checkout zamanı)
+  const handleClearCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <BrowserRouter>
       {/* ScrollToTop mütləq BrowserRouter daxilində olmalıdır */}
@@ -78,6 +83,7 @@ function App() {
           cartItems={cartItems}
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
+          onClearCart={handleClearCart}
         />
       </DataProvider>
     </BrowserRouter>
