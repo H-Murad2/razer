@@ -47,11 +47,20 @@ function Home() {
     const fetchAllProducts = async () => {
       try {
         const responses = await Promise.all(
-          endpoints.map((url) =>
-            fetch(url)
-              .then((res) => (res.ok ? res.json() : []))
-              .catch(() => [])
-          )
+          endpoints.map(async (url) => {
+            try {
+              const res = await fetch(url);
+              const contentType = res.headers.get("content-type");
+              
+              // Əgər cavab JSON deyilsə (məsələn, HTML xəta səhifəsidirsə), boş massiv qaytaraq
+              if (!res.ok || !contentType || !contentType.includes("application/json")) {
+                return [];
+              }
+              return await res.json();
+            } catch (err) {
+              return [];
+            }
+          })
         );
 
         let selectedProducts = [];
