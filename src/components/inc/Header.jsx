@@ -3,16 +3,18 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Menu, X, Search } from 'lucide-react';
 import logo from '../../assets/razer-logo.svg';
 
+const API_BASE_URL = "https://razer-api-88py.vercel.app";
+
 const categoryEndpoints = [
-  { categoryId: 'laptop', url: '/api/laptop' },
-  { categoryId: 'mice', url: '/api/mice' },
-  { categoryId: 'keyboards', url: '/api/keyboards' },
-  { categoryId: 'audio', url: '/api/audio' },
-  { categoryId: 'chairs', url: '/api/chairs' },
-  { categoryId: 'controllers', url: '/api/controllers' },
-  { categoryId: 'mouse-mats', url: '/api/mouse-mats' },
-  { categoryId: 'content-creation', url: '/api/content-creation' },
-  { categoryId: 'game-room', url: '/api/game-room' },
+  { categoryId: 'laptop', url: `${API_BASE_URL}/api/laptop` },
+  { categoryId: 'mice', url: `${API_BASE_URL}/api/mice` },
+  { categoryId: 'keyboards', url: `${API_BASE_URL}/api/keyboards` },
+  { categoryId: 'audio', url: `${API_BASE_URL}/api/audio` },
+  { categoryId: 'chairs', url: `${API_BASE_URL}/api/chairs` },
+  { categoryId: 'controllers', url: `${API_BASE_URL}/api/controllers` },
+  { categoryId: 'mouse-mats', url: `${API_BASE_URL}/api/mouse-mats` },
+  { categoryId: 'content-creation', url: `${API_BASE_URL}/api/content-creation` },
+  { categoryId: 'game-room', url: `${API_BASE_URL}/api/game-room` },
 ];
 
 const formatImagePath = (path) => {
@@ -25,7 +27,7 @@ const formatImagePath = (path) => {
   if (!imgPath.startsWith("/")) {
     imgPath = "/" + imgPath;
   }
-  return `http://localhost:3000${imgPath}`;
+  return `${API_BASE_URL}${imgPath}`;
 };
 
 function Header({ cartCount = 0, onOpenCart }) {
@@ -64,7 +66,7 @@ function Header({ cartCount = 0, onOpenCart }) {
         });
 
         if (allFetched.length === 0) {
-          const mainRes = await fetch('/api/products').catch(() => null);
+          const mainRes = await fetch(`${API_BASE_URL}/api/products`).catch(() => null);
           if (mainRes && mainRes.ok) {
             const mainData = await mainRes.json();
             if (Array.isArray(mainData)) allFetched = mainData;
@@ -118,7 +120,6 @@ function Header({ cartCount = 0, onOpenCart }) {
       selectedVariant: selectedVar
     };
 
-    // Səhifəyə keçid edirik
     navigate(`/product/${targetId}`, { state: { product: productData } });
   };
 
@@ -194,7 +195,7 @@ function Header({ cartCount = 0, onOpenCart }) {
                         <div
                           key={item._uniqueKey || item.id}
                           onMouseDown={(e) => {
-                            e.preventDefault(); // Click-in vaxtından əvvəl itməsinin qarşısını alır
+                            e.preventDefault();
                             handleSelectProduct(item);
                           }}
                           className="flex items-center gap-3 p-3 hover:bg-[#252525] cursor-pointer transition border-b border-[#222] last:border-b-0"
