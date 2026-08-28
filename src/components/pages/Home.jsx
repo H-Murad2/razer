@@ -24,7 +24,6 @@ function Home({ onAddToCart }) {
     `${API_BASE_URL}/api/game-room`,
   ];
 
-  // Şəkil yolunu tənzimləyən köməkçi funksiya
   const getProductImage = (product) => {
     let imgPath = product.image || "";
 
@@ -85,7 +84,6 @@ function Home({ onAddToCart }) {
     fetchAllProducts();
   }, []);
 
-  // Karta vuranda detal səhifəsinə keçid
   const handleCardClick = (product, imageUrl) => {
     const productId = product.id || product._uniqueKey || `${product.category || 'item'}-${Math.random().toString(36).substring(2, 7)}`;
     const productData = {
@@ -98,18 +96,21 @@ function Home({ onAddToCart }) {
     navigate(`/product/${productId}`, { state: { product: productData, from: 'home' } });
   };
 
-  // BUY düyməsinə vuranda səbətə əlavə etmə
   const handleBuyClick = (e, product, imageUrl) => {
-    e.stopPropagation(); // Detal səhifəsinə keçidin qarşısını alır
-    const productData = {
-      ...product,
-      image: imageUrl,
+    e.stopPropagation();
+    
+    const itemToAdd = {
+      id: product.id || product._uniqueKey || `${product.category || 'item'}-${Math.random().toString(36).substring(2, 7)}`,
       name: product.name,
-      price: product.price || 0
+      price: Number(product.price || 0),
+      image: imageUrl,
+      category: product.category || "Gaming Gear"
     };
 
-    if (onAddToCart) {
-      onAddToCart(productData);
+    if (typeof onAddToCart === 'function') {
+      onAddToCart(itemToAdd);
+    } else {
+      console.warn("onAddToCart prop-u təyin edilməyib və ya funksiya deyil!");
     }
   };
 
@@ -204,6 +205,7 @@ function Home({ onAddToCart }) {
                     </span>
 
                     <button 
+                      type="button"
                       onClick={(e) => handleBuyClick(e, product, imageUrl)}
                       className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold py-2.5 uppercase text-xs tracking-wider rounded-xs transition-colors cursor-pointer"
                     >

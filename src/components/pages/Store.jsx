@@ -11,7 +11,6 @@ import chairsImg from '/src/assets/storeCat/chairs.webp';
 import contentCreationImg from '/src/assets/storeCat/content-creation.webp';
 import gamerRoomImg from '/src/assets/storeCat/game-room.webp';
 
-// Live Vercel API Base URL
 const API_BASE_URL = "https://razer-api-88py.vercel.app";
 
 const categories = [
@@ -118,7 +117,6 @@ function ProductCard({ product, onAddToCart }) {
   const price = selectedVariant?.price || product.price || 0;
   const badge = product.badge || "ONLY AT RAZER";
 
-  // Məhsulun üzərinə kliklədikdə Detal səhifəsinə yönləndirmə
   const handleCardClick = () => {
     const productId = product.id || product._uniqueKey;
     const productData = {
@@ -132,19 +130,22 @@ function ProductCard({ product, onAddToCart }) {
     navigate(`/product/${productId}`, { state: { product: productData } });
   };
 
-  // BUY düyməsinə kliklədikdə Səbətə əlavə etmə
   const handleBuyClick = (e) => {
-    e.stopPropagation(); // Kart kliklənməsini dayandırır (detal səhifəsinə keçmir)
-    const productData = {
-      ...product,
-      image: currentImage,
-      name: currentName,
-      price: price,
-      selectedVariant: selectedVariant
-    };
+    e.stopPropagation(); // Karta kliklənib detal səhifəsinə keçməsinin qarşısını alır
     
-    if (onAddToCart) {
-      onAddToCart(productData);
+    const itemToAdd = {
+      id: product.id || product._uniqueKey,
+      name: currentName,
+      price: Number(price),
+      image: currentImage,
+      selectedVariant: selectedVariant,
+      category: product.categoryId || product.category || "Gaming Gear"
+    };
+
+    if (typeof onAddToCart === 'function') {
+      onAddToCart(itemToAdd);
+    } else {
+      console.warn("onAddToCart prop-u təyin edilməyib və ya funksiya deyil!");
     }
   };
 
@@ -254,6 +255,7 @@ function ProductCard({ product, onAddToCart }) {
           </div>
 
           <button 
+            type="button"
             onClick={handleBuyClick}
             className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-black font-semibold py-3 uppercase text-sm tracking-wider rounded-md transition-colors cursor-pointer"
           >
