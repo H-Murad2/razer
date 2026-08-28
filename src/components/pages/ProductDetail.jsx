@@ -35,7 +35,6 @@ function ProductDetail({ onAddToCart }) {
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
 
-  // İstifadəçinin Home səhifəsindən gəlib-gəlmədiyini yoxlayırıq
   const isFromHome = location.state?.from === 'home';
   const backPath = isFromHome ? '/' : '/store';
   const backText = isFromHome ? 'Back to Home' : 'Back to Store';
@@ -113,6 +112,7 @@ function ProductDetail({ onAddToCart }) {
   }
 
   const hasVariants = product.variants && product.variants.length > 0;
+  const isLaptop = product.category?.toLowerCase() === 'laptops' || product.specs;
 
   const currentImage = selectedVariant
     ? formatImagePath(selectedVariant.image || selectedVariant.img || selectedVariant.picture || selectedVariant.imageUrl || product.image)
@@ -183,10 +183,10 @@ function ProductDetail({ onAddToCart }) {
             </div>
 
             <p className="text-gray-400 text-sm leading-relaxed font-normal">
-              {product.description || "High-performance gaming gear designed for competitive play and ultimate durability."}
+              {product.description || "High-performance laptop engineered for extreme gaming and creative workflows."}
             </p>
 
-            {/* Variants */}
+            {/* Variants (Color options) */}
             {hasVariants && (
               <div className="space-y-3 border-y border-[#1a1a1a] py-4 my-1">
                 <div className="flex items-center gap-2 text-xs">
@@ -211,6 +211,53 @@ function ProductDetail({ onAddToCart }) {
                       />
                     );
                   })}
+                </div>
+              </div>
+            )}
+
+            {/* Laptop Technical Specifications */}
+            {isLaptop && product.specs && (
+              <div className="border-t border-[#1a1a1a] pt-4 space-y-3">
+                <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wider">
+                  Technical Specifications
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-[#121212] p-4 rounded-lg border border-[#1f1f1f]">
+                  {product.specs.display && (
+                    <div>
+                      <span className="text-gray-400 block font-normal">Display</span>
+                      <span className="text-white font-medium">{product.specs.display}</span>
+                    </div>
+                  )}
+                  {product.specs.processor && (
+                    <div>
+                      <span className="text-gray-400 block font-normal">Processor</span>
+                      <span className="text-white font-medium">{product.specs.processor}</span>
+                    </div>
+                  )}
+                  {product.specs.gpu && (
+                    <div>
+                      <span className="text-gray-400 block font-normal">Graphics</span>
+                      <span className="text-white font-medium">{product.specs.gpu}</span>
+                    </div>
+                  )}
+                  {product.specs.ram && (
+                    <div>
+                      <span className="text-gray-400 block font-normal">Memory</span>
+                      <span className="text-white font-medium">{product.specs.ram}</span>
+                    </div>
+                  )}
+                  {product.specs.storage && (
+                    <div>
+                      <span className="text-gray-400 block font-normal">Storage</span>
+                      <span className="text-white font-medium">{product.specs.storage}</span>
+                    </div>
+                  )}
+                  {product.specs.os && (
+                    <div>
+                      <span className="text-gray-400 block font-normal">OS</span>
+                      <span className="text-white font-medium">{product.specs.os}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
