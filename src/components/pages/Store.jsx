@@ -91,7 +91,7 @@ function ProductSkeleton() {
   );
 }
 
-function ProductCard({ product }) {
+function ProductCard({ product, onAddToCart }) {
   const navigate = useNavigate();
   const hasVariants = product.variants && product.variants.length > 0;
   
@@ -118,8 +118,8 @@ function ProductCard({ product }) {
   const price = selectedVariant?.price || product.price || 0;
   const badge = product.badge || "ONLY AT RAZER";
 
-  const handleBuyClick = (e) => {
-    e.stopPropagation();
+  // Məhsulun üzərinə kliklədikdə Detal səhifəsinə yönləndirmə
+  const handleCardClick = () => {
     const productId = product.id || product._uniqueKey;
     const productData = {
       ...product,
@@ -132,8 +132,27 @@ function ProductCard({ product }) {
     navigate(`/product/${productId}`, { state: { product: productData } });
   };
 
+  // BUY düyməsinə kliklədikdə Səbətə əlavə etmə
+  const handleBuyClick = (e) => {
+    e.stopPropagation(); // Kart kliklənməsini dayandırır (detal səhifəsinə keçmir)
+    const productData = {
+      ...product,
+      image: currentImage,
+      name: currentName,
+      price: price,
+      selectedVariant: selectedVariant
+    };
+    
+    if (onAddToCart) {
+      onAddToCart(productData);
+    }
+  };
+
   return (
-    <div className="bg-[#181818] border border-[#222222] rounded-md overflow-hidden flex flex-col justify-between group">
+    <div 
+      onClick={handleCardClick}
+      className="bg-[#181818] border border-[#222222] hover:border-[#333333] rounded-md overflow-hidden flex flex-col justify-between group cursor-pointer transition-colors"
+    >
       <div className="relative bg-[#222222] p-6 flex items-center justify-center min-h-[260px]">
         {badge && (
           <span className="absolute top-0 left-0 bg-[#FFB800] text-black text-[10px] font-bold px-2 py-1 uppercase tracking-wider z-10">
@@ -246,7 +265,7 @@ function ProductCard({ product }) {
   );
 }
 
-function Store() {
+function Store({ onAddToCart }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -369,7 +388,11 @@ function Store() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <ProductCard key={product._uniqueKey} product={product} />
+              <ProductCard 
+                key={product._uniqueKey} 
+                product={product} 
+                onAddToCart={onAddToCart}
+              />
             ))}
           </div>
         )}

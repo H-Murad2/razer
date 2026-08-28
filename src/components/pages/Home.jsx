@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = "https://razer-api-88py.vercel.app";
 
-function Home() {
+function Home({ onAddToCart }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -52,7 +52,6 @@ function Home() {
               const res = await fetch(url);
               const contentType = res.headers.get("content-type");
               
-              // Əgər cavab JSON deyilsə (məsələn, HTML xəta səhifəsidirsə), boş massiv qaytaraq
               if (!res.ok || !contentType || !contentType.includes("application/json")) {
                 return [];
               }
@@ -86,7 +85,8 @@ function Home() {
     fetchAllProducts();
   }, []);
 
-  const handleBuyClick = (product, imageUrl) => {
+  // Karta vuranda detal səhifəsinə keçid
+  const handleCardClick = (product, imageUrl) => {
     const productId = product.id || product._uniqueKey || `${product.category || 'item'}-${Math.random().toString(36).substring(2, 7)}`;
     const productData = {
       ...product,
@@ -96,6 +96,21 @@ function Home() {
     };
 
     navigate(`/product/${productId}`, { state: { product: productData, from: 'home' } });
+  };
+
+  // BUY düyməsinə vuranda səbətə əlavə etmə
+  const handleBuyClick = (e, product, imageUrl) => {
+    e.stopPropagation(); // Detal səhifəsinə keçidin qarşısını alır
+    const productData = {
+      ...product,
+      image: imageUrl,
+      name: product.name,
+      price: product.price || 0
+    };
+
+    if (onAddToCart) {
+      onAddToCart(productData);
+    }
   };
 
   if (loading) {
@@ -153,7 +168,8 @@ function Home() {
             return (
               <div
                 key={`${product.category || "item"}-${product.id || idx}`}
-                className="bg-[#121212] border border-[#222] hover:border-[#333] transition rounded-sm overflow-hidden flex flex-col justify-between"
+                onClick={() => handleCardClick(product, imageUrl)}
+                className="bg-[#121212] border border-[#222] hover:border-[#333] transition rounded-sm overflow-hidden flex flex-col justify-between cursor-pointer group"
               >
                 <div className="relative bg-[#1a1a1a] p-6 flex items-center justify-center min-h-[240px]">
                   {badge && (
@@ -165,7 +181,7 @@ function Home() {
                   <img
                     src={imageUrl}
                     alt={product.name}
-                    className="max-h-[300px] object-contain"
+                    className="max-h-[300px] object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
@@ -188,7 +204,7 @@ function Home() {
                     </span>
 
                     <button 
-                      onClick={() => handleBuyClick(product, imageUrl)}
+                      onClick={(e) => handleBuyClick(e, product, imageUrl)}
                       className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold py-2.5 uppercase text-xs tracking-wider rounded-xs transition-colors cursor-pointer"
                     >
                       BUY
