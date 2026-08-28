@@ -13,15 +13,16 @@ import Lifestyle from '../pages/Lifestyle';
 import Mobile from '../pages/Mobile';
 import PC from '../pages/PC';
 import Support from '../pages/Support';
-import Community from '../pages/Community'; // Community daxil edildi
+import Community from '../pages/Community';
 
 function Router({ cartCount, onOpenCart, onAddToCart }) {
   return (
     <>
       <Header cartCount={cartCount} onOpenCart={onOpenCart} />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/store" element={<Store />} />
+        {/* Home və Store komponentlərinə onAddToCart prop-u əlavə olundu */}
+        <Route path="/" element={<Home onAddToCart={onAddToCart} />} />
+        <Route path="/store" element={<Store onAddToCart={onAddToCart} />} />
         
         {/* Həm /product-detail, həm də /product/:id keçidləri dəstəklənir */}
         <Route 
@@ -38,8 +39,6 @@ function Router({ cartCount, onOpenCart, onAddToCart }) {
         <Route path="/mobile" element={<Mobile />} />
         <Route path="/pc" element={<PC />} />
         <Route path="/support" element={<Support />} />
-        
-        {/* Community marşrutu əlavə olundu */}
         <Route path="/community" element={<Community />} />
       </Routes>
     </>
