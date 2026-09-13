@@ -84,8 +84,7 @@ function Home({ onAddToCart }) {
     fetchAllProducts();
   }, []);
 
-  const handleCardClick = (product, imageUrl) => {
-    const productId = product.id || product._uniqueKey || `${product.category || 'item'}-${Math.random().toString(36).substring(2, 7)}`;
+  const handleCardClick = (product, imageUrl, uniqueId) => {
     const productData = {
       ...product,
       image: imageUrl,
@@ -93,14 +92,14 @@ function Home({ onAddToCart }) {
       price: product.price || 0
     };
 
-    navigate(`/product/${productId}`, { state: { product: productData, from: 'home' } });
+    navigate(`/product/${uniqueId}`, { state: { product: productData, from: 'home' } });
   };
 
-  const handleBuyClick = (e, product, imageUrl) => {
+  const handleBuyClick = (e, product, imageUrl, uniqueId) => {
     e.stopPropagation();
     
     const itemToAdd = {
-      id: product.id || product._uniqueKey || `${product.category || 'item'}-${Math.random().toString(36).substring(2, 7)}`,
+      id: uniqueId,
       name: product.name,
       price: Number(product.price || 0),
       image: imageUrl,
@@ -165,11 +164,12 @@ function Home({ onAddToCart }) {
             const price = product.price || 0;
             const imageUrl = getProductImage(product);
             const badge = product.badge;
+            const uniqueId = product._uniqueKey || `${product.category || 'item'}-${product.id ?? idx}`;
 
             return (
               <div
-                key={`${product.category || "item"}-${product.id || idx}`}
-                onClick={() => handleCardClick(product, imageUrl)}
+                key={uniqueId}
+                onClick={() => handleCardClick(product, imageUrl, uniqueId)}
                 className="bg-[#121212] border border-[#222] hover:border-[#333] transition rounded-sm overflow-hidden flex flex-col justify-between cursor-pointer group"
               >
                 <div className="relative bg-[#1a1a1a] p-6 flex items-center justify-center min-h-[240px]">
@@ -206,7 +206,7 @@ function Home({ onAddToCart }) {
 
                     <button 
                       type="button"
-                      onClick={(e) => handleBuyClick(e, product, imageUrl)}
+                      onClick={(e) => handleBuyClick(e, product, imageUrl, uniqueId)}
                       className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold py-2.5 uppercase text-xs tracking-wider rounded-xs transition-colors cursor-pointer"
                     >
                       BUY
