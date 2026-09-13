@@ -16,12 +16,18 @@ function ScrollToTop() {
 }
 
 function App() {
-  const [cartItems, setCartItems] = useState([]);
+ const [cartItems, setCartItems] = useState(() => {
+  const saved = localStorage.getItem('cartItems');
+  return saved ? JSON.parse(saved) : [];
+});
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   // İkon üçün YALNIZ UNİKAL MƏHSUL NÖVLƏRİNİN SAYI:
   const uniqueCartCount = cartItems.length;
 
+  useEffect(() => {
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+}, [cartItems]);
   // Səbətə məhsul əlavə etmək
   const handleAddToCart = (newItem) => {
     setCartItems((prev) => {
