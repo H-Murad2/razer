@@ -39,7 +39,18 @@ const categoryEndpoints = [
 
 const formatImagePath = (path) => {
   if (!path) return "";
-  let imgPath = path;  
+  let imgPath = path;
+  
+  if (imgPath.startsWith("/api/images")) {
+    imgPath = imgPath.replace("/api/images", "/images");
+  }
+  
+  if (imgPath.startsWith("http")) return imgPath;
+  
+  if (!imgPath.startsWith("/")) {
+    imgPath = "/" + imgPath;
+  }
+  
   return `${API_BASE_URL}${imgPath}`;
 };
 
