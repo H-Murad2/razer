@@ -25,7 +25,7 @@ const formatImagePath = (path) => {
   }
   if (imgPath.startsWith("http")) return imgPath;
   if (!imgPath.startsWith("/")) {
-    imgPath = "/" + imgPath; 
+    imgPath = "/" + imgPath;
   }
   return `${API_BASE_URL}${imgPath}`;
 };
@@ -42,41 +42,34 @@ function Header({ cartCount = 0, onOpenCart }) {
 
   useEffect(() => {
     const fetchAllProducts = async () => {
-      try {
-        const responses = await Promise.all(
-          categoryEndpoints.map(({ categoryId, url }) =>
-            fetch(url)
-              .then((res) => (res.ok ? res.json() : []))
-              .then((data) => ({ categoryId, data }))
-              .catch(() => ({ categoryId, data: [] }))
-          )
-        );
+      const responses = await Promise.all(
+        categoryEndpoints.map(({ categoryId, url }) =>
+          fetch(url)
+            .then((res) => (res.ok ? res.json() : []))
+            .then((data) => ({ categoryId, data }))
+            .catch(() => ({ categoryId, data: [] }))
+        )
+      );
 
-        let allFetched = [];
-        responses.forEach(({ categoryId, data }, endpointIdx) => {
-          if (Array.isArray(data)) {
-            const preparedData = data.map((item, itemIdx) => ({
-              ...item,
-              categoryId,
-              id: item.id || `${categoryId}-${itemIdx}`,
-              _uniqueKey: `${endpointIdx}-${item.id || itemIdx}`
-            }));
-            allFetched.push(...preparedData);
-          }
-        });
+      let allFetched = responses.flatMap(({ categoryId, data }, endpointIdx) => {
+        if (!Array.isArray(data)) return [];
+        return data.map((item, itemIdx) => ({
+          ...item,
+          categoryId,
+          id: item.id || `${categoryId}-${itemIdx}`,
+          _uniqueKey: `${endpointIdx}-${item.id || itemIdx}`
+        }));
+      });
 
-        if (allFetched.length === 0) {
-          const mainRes = await fetch(`${API_BASE_URL}/api/products`).catch(() => null);
-          if (mainRes && mainRes.ok) {
-            const mainData = await mainRes.json();
-            if (Array.isArray(mainData)) allFetched = mainData;
-          }
+      if (allFetched.length === 0) {
+        const mainRes = await fetch(`${API_BASE_URL}/api/products`).catch(() => null);
+        if (mainRes?.ok) {
+          const mainData = await mainRes.json();
+          if (Array.isArray(mainData)) allFetched = mainData;
         }
-
-        setProducts(allFetched);
-      } catch (error) {
-        console.error("Axtarış üçün məhsullar yüklənərkən xəta:", error);
       }
+
+      setProducts(allFetched);
     };
 
     fetchAllProducts();
