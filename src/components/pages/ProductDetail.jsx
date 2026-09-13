@@ -123,8 +123,9 @@ function ProductDetail({ onAddToCart }) {
 
   const handleAddToCartClick = () => {
     if (onAddToCart) {
+      const uniqueId = `${product.category || product.categoryId || 'item'}-${product.id ?? product.name}`;
       onAddToCart({
-        id: product.id || product.name,
+        id: uniqueId,
         name: product.name,
         price: currentPrice,
         image: currentImage,

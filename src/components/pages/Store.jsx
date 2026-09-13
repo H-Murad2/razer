@@ -118,7 +118,7 @@ function ProductCard({ product, onAddToCart }) {
   const badge = product.badge || "ONLY AT RAZER";
 
   const handleCardClick = () => {
-    const productId = product.id || product._uniqueKey;
+    const productId = product._uniqueKey || product.id;
     const productData = {
       ...product,
       image: currentImage,
@@ -134,7 +134,7 @@ function ProductCard({ product, onAddToCart }) {
     e.stopPropagation(); // Karta kliklənib detal səhifəsinə keçməsinin qarşısını alır
     
     const itemToAdd = {
-      id: product.id || product._uniqueKey,
+      id: product._uniqueKey || product.id,
       name: currentName,
       price: Number(price),
       image: currentImage,
