@@ -25,7 +25,7 @@ const formatImagePath = (path) => {
   }
   if (imgPath.startsWith("http")) return imgPath;
   if (!imgPath.startsWith("/")) {
-    imgPath = "/" + imgPath;
+    imgPath = "/" + imgPath; 
   }
   return `${API_BASE_URL}${imgPath}`;
 };

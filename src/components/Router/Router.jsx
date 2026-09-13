@@ -1,10 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-
-// Header 'inc' qovluğunda yerləşir
 import Header from '../inc/Header';
-
-// Pages
 import Home from '../pages/Home';
 import Store from '../pages/Store';
 import ProductDetail from '../pages/ProductDetail';
@@ -20,11 +16,8 @@ function Router({ cartCount, onOpenCart, onAddToCart }) {
     <>
       <Header cartCount={cartCount} onOpenCart={onOpenCart} />
       <Routes>
-        {/* Home və Store komponentlərinə onAddToCart prop-u əlavə olundu */}
         <Route path="/" element={<Home onAddToCart={onAddToCart} />} />
         <Route path="/store" element={<Store onAddToCart={onAddToCart} />} />
-        
-        {/* Həm /product-detail, həm də /product/:id keçidləri dəstəklənir */}
         <Route 
           path="/product-detail" 
           element={<ProductDetail onAddToCart={onAddToCart} />} 

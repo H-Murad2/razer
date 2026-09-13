@@ -29,16 +29,6 @@ function Home({ onAddToCart }) {
 
     if (!imgPath) return "";
 
-    if (imgPath.startsWith("/api/images")) {
-      imgPath = imgPath.replace("/api/images", "/images");
-    }
-
-    if (imgPath.startsWith("http")) return imgPath;
-
-    if (!imgPath.startsWith("/")) {
-      imgPath = "/" + imgPath;
-    }
-
     return `${API_BASE_URL}${imgPath}`;
   };
 
